@@ -7,7 +7,7 @@ import dsv from 'd3-dsv';
 class BlockStatic extends Component {
 
   static contextTypes = {
-    datasets: propTypes.object,
+    datasets: PropTypes.object,
   }
 
   constructor (props) {

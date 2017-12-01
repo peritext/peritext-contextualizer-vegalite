@@ -121,7 +121,7 @@ var BlockDynamic = (_temp = _class = function (_Component) {
   }]);
   return BlockDynamic;
 }(_react.Component), _class.contextTypes = {
-  datasets: propTypes.object
+  datasets: _propTypes2.default.object
 }, _initialiseProps = function _initialiseProps() {
   var _this2 = this;
 
