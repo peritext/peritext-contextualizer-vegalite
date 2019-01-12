@@ -1,5 +1,5 @@
-export {default as metadata} from './metadata';
-export {default as BlockStatic} from './BlockStatic';
-export {default as BlockDynamic} from './BlockDynamic';
+import BlockComponent from './Block';
+import metadata from './meta';
 
-export const defaultCss = '';
+export const Block = BlockComponent;
+export const meta = metadata;
