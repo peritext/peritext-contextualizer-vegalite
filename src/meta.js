@@ -1,3 +1,4 @@
+import {asyncPrerender} from './utils';
 
 export default {
   id: 'vegaLite',
@@ -8,6 +9,7 @@ export default {
     type: 'table',
   }
   ],
+  asyncPrerender: asyncPrerender,
   profile: {
     block: {
       mutable: false,
