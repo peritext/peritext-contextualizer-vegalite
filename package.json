@@ -18,15 +18,15 @@
   },
   "homepage": "https://github.com/peritext/peritext-contextualizer-vegalite#readme",
   "peerDependencies": {
-    "react": "^16.7.0-alpha",
-    "react-dom": "^16.7.0-alpha"
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0"
   },
   "dependencies": {
     "peritext-utils": "^0.1.0",
-    "react-vega": "^4.0.2",
-    "react-vega-lite": "^2.0.2",
+    "react-vega": "^7.1.1",
+    "vega": "^5.8.1",
     "vega-lib": "^4.4.0",
-    "vega-lite": "^3.0.0-rc11"
+    "vega-lite": "^4.0.0-beta.12"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
@@ -41,8 +41,8 @@
     "lodash": "^4.17",
     "peritext-schemas": "^0.1.0",
     "pre-commit": "^1.2.2",
-    "react": "^16.7.0-alpha",
-    "react-dom": "^16.7.0-alpha"
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0"
   },
   "babel": {
     "plugins": [

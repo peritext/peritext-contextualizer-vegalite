@@ -9,8 +9,6 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _reactVegaLite = _interopRequireDefault(require("react-vega-lite"));
-
 var _meta = _interopRequireDefault(require("./meta"));
 
 var _peritextUtils = require("peritext-utils");
@@ -22,6 +20,16 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+const isBrowser = new Function('try {return this===window;}catch(e){ return false;}');
+/* eslint no-new-func : 0 */
+
+const inBrowser = isBrowser();
+let VegaLite;
+
+if (inBrowser) {
+  VegaLite = require('react-vega').VegaLite;
+}
 
 class Block extends _react.Component {
   constructor(...args) {
@@ -41,7 +49,8 @@ class Block extends _react.Component {
           renderingMode
         },
         context: {
-          productionAssets
+          productionAssets,
+          preprocessedContextualizations
         }
       } = this;
       const appropriateAsset = (0, _peritextUtils.chooseAppropriateAsset)(resource, _meta.default.profile.block.assetPickingRules.element[renderingMode], productionAssets);
@@ -64,6 +73,24 @@ class Block extends _react.Component {
       const asset = appropriateAsset.asset;
 
       const renderContent = () => {
+        if (!inBrowser) {
+          if (preprocessedContextualizations && preprocessedContextualizations[contextualization.id]) {
+            if (preprocessedContextualizations[contextualization.id].svg) {
+              return _react.default.createElement("div", {
+                dangerouslySetInnerHTML: {
+                  __html: preprocessedContextualizations[contextualization.id].svg
+                }
+              });
+            } else if (preprocessedContextualizations[contextualization.id].base64) {
+              return _react.default.createElement("img", {
+                src: preprocessedContextualizations[contextualization.id].base64
+              });
+            }
+          }
+
+          return null;
+        }
+
         switch (field) {
           case 'dataAssetId':
             let spec;
@@ -80,14 +107,16 @@ class Block extends _react.Component {
               [key]: isNaN(+obj[key]) ? obj[key] : +obj[key]
             }), {}));
 
-            const finalSpec = _objectSpread({}, spec, {
-              $schema: 'https://vega.github.io/schema/vegaLite/v3.json',
+            const finalSpec = _objectSpread({
+              $schema: 'https://vega.github.io/schema/vega-lite/v2.json'
+            }, spec, {
               data: {
+                name: 'dataset',
                 values: finalData
               }
             });
 
-            return _react.default.createElement(_reactVegaLite.default, {
+            return _react.default.createElement(VegaLite, {
               spec: finalSpec
             });
 
@@ -106,7 +135,8 @@ class Block extends _react.Component {
 }
 
 _defineProperty(Block, "contextTypes", {
-  productionAssets: _propTypes.default.object
+  productionAssets: _propTypes.default.object,
+  preprocessedContextualizations: _propTypes.default.object
 });
 
 var _default = Block;

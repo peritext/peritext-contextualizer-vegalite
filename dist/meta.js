@@ -4,6 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _utils = require("./utils");
+
 var _default = {
   id: 'vegaLite',
   type: 'peritext-contextualizer',
@@ -11,6 +14,7 @@ var _default = {
   acceptedResourceTypes: [{
     type: 'table'
   }],
+  asyncPrerender: _utils.asyncPrerender,
   profile: {
     block: {
       mutable: false,
