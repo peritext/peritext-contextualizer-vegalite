@@ -26,9 +26,11 @@ const isBrowser = new Function('try {return this===window;}catch(e){ return fals
 
 const inBrowser = isBrowser();
 let VegaLite;
+let Vega;
 
 if (inBrowser) {
   VegaLite = require('react-vega').VegaLite;
+  Vega = require('react-vega').Vega;
 }
 
 class Block extends _react.Component {
@@ -66,9 +68,10 @@ class Block extends _react.Component {
         parameters = {}
       } = contextualizer;
       const {
-        vegaLiteSpecificationCode = ''
-        /* eslint camelcase: 0 */
+        vegaLiteSpecificationCode = '',
 
+        /* eslint camelcase: 0 */
+        liteMode = true
       } = parameters;
       const asset = appropriateAsset.asset;
 
@@ -106,19 +109,25 @@ class Block extends _react.Component {
             const finalData = (asset.data || []).map(obj => Object.keys(obj).reduce((res, key) => _objectSpread({}, res, {
               [key]: isNaN(+obj[key]) ? obj[key] : +obj[key]
             }), {}));
+            const schemaRef = liteMode ? 'https://vega.github.io/schema/vega-lite/v4.json' : 'https://vega.github.io/schema/vega/v4.json';
 
             const finalSpec = _objectSpread({
-              $schema: 'https://vega.github.io/schema/vega-lite/v2.json'
-            }, spec, {
+              $schema: schemaRef,
               data: {
                 name: 'dataset',
                 values: finalData
               }
-            });
+            }, spec);
 
-            return _react.default.createElement(VegaLite, {
-              spec: finalSpec
-            });
+            if (liteMode) {
+              return _react.default.createElement(VegaLite, {
+                spec: finalSpec
+              });
+            } else {
+              return _react.default.createElement(Vega, {
+                spec: finalSpec
+              });
+            }
 
           default:
             return null;

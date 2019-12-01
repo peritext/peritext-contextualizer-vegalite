@@ -39,9 +39,10 @@ const asyncPrerender = ({
     parameters = {}
   } = contextualizer;
   const {
-    vegaLiteSpecificationCode = ''
-    /* eslint camelcase: 0 */
+    vegaLiteSpecificationCode = '',
 
+    /* eslint camelcase: 0 */
+    liteMode = true
   } = parameters;
   const asset = appropriateAsset.asset;
   let spec;
@@ -55,20 +56,28 @@ const asyncPrerender = ({
   const finalData = (asset.data || []).map(obj => Object.keys(obj).reduce((res, key) => _objectSpread({}, res, {
     [key]: isNaN(+obj[key]) ? obj[key] : +obj[key]
   }), {}));
+  const schemaRef = liteMode ? 'https://vega.github.io/schema/vega-lite/v4.json' : 'https://vega.github.io/schema/vega/v4.json';
 
   const finalSpec = _objectSpread({
-    $schema: 'https://vega.github.io/schema/vega-lite/v2.json'
-  }, spec, {
+    $schema: schemaRef,
     data: {
       name: 'data',
       values: finalData
     }
-  }); // create the view
+  }, spec); // create the view
 
 
-  const view = new _vega.View((0, _vega.parse)((0, _vegaLite.compile)(finalSpec).spec), {
-    renderer: 'none'
-  }); // generate a static SVG image
+  let view;
+
+  if (liteMode) {
+    view = new _vega.View((0, _vega.parse)((0, _vegaLite.compile)(finalSpec).spec), {
+      renderer: 'none'
+    });
+  } else {
+    view = new _vega.View((0, _vega.parse)(finalSpec), {
+      renderer: 'none'
+    });
+  } // generate a static SVG image
   // view.toSVG()
   //   .then(function(svg) {
   //     // process svg string
@@ -76,6 +85,7 @@ const asyncPrerender = ({
   //   })
   //   .catch(reject);
   // generate a raster PNG image
+
 
   view.toCanvas().then(function (canvas) {
     const base64 = canvas.toDataURL(); // process base64 png string

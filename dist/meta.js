@@ -19,6 +19,10 @@ var _default = {
     block: {
       mutable: false,
       options: {
+        liteMode: {
+          type: 'boolean',
+          default: true
+        },
         vegaLiteSpecificationCode: {
           type: 'string',
           code: true,

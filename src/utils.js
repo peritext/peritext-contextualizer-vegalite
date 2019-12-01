@@ -25,6 +25,7 @@ export const asyncPrerender = ({
 
   const {
     vegaLiteSpecificationCode = '', /* eslint camelcase: 0 */
+    liteMode = true,
   } = parameters;
 
   const asset = appropriateAsset.asset;
@@ -41,18 +42,23 @@ export const asyncPrerender = ({
         ...res,
         [key]: isNaN( +obj[key] ) ? obj[key] : +obj[key]
       } ), {} ) );
-
+  const schemaRef = liteMode ? 'https://vega.github.io/schema/vega-lite/v4.json' : 'https://vega.github.io/schema/vega/v4.json'
   const finalSpec = {
-    $schema: 'https://vega.github.io/schema/vega-lite/v2.json',
-    ...spec,
+    $schema: schemaRef,
     data: {
       name: 'data',
       values: finalData
-    }
+    },
+    ...spec,
   };
   // create the view
-  const view = new View(parse(compile(finalSpec).spec), {renderer: 'none'});
+  let view;
+  if (liteMode) {
+    view = new View(parse(compile(finalSpec).spec), {renderer: 'none'});
+  } else {
+    view = new View(parse(finalSpec), {renderer: 'none'});
 
+  }
   // generate a static SVG image
   // view.toSVG()
   //   .then(function(svg) {

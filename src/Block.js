@@ -9,8 +9,10 @@ const isBrowser = new Function( 'try {return this===window;}catch(e){ return fal
 const inBrowser = isBrowser();
 
 let VegaLite;
+let Vega;
 if (inBrowser) {
   VegaLite = require('react-vega').VegaLite;
+  Vega = require('react-vega').Vega;
 }
 
 
@@ -55,6 +57,7 @@ class Block extends Component {
 
     const {
       vegaLiteSpecificationCode = '', /* eslint camelcase: 0 */
+      liteMode = true
     } = parameters;
 
     const asset = appropriateAsset.asset;
@@ -98,20 +101,28 @@ class Block extends Component {
                 [key]: isNaN( +obj[key] ) ? obj[key] : +obj[key]
               } ), {} ) );
 
+          const schemaRef = liteMode ? 'https://vega.github.io/schema/vega-lite/v4.json' : 'https://vega.github.io/schema/vega/v4.json'
           const finalSpec = {
-            $schema: 'https://vega.github.io/schema/vega-lite/v2.json',
-            ...spec,
+            $schema: schemaRef,
             data: {
               name: 'dataset',
               values: finalData
-            }
+            },
+            ...spec,
           };
-
-          return (
-            <VegaLite
-              spec={ finalSpec }
-            />
-          );
+          if (liteMode) {
+            return (
+              <VegaLite
+                spec={ finalSpec }
+              />
+            );
+          } else {
+            return (
+              <Vega
+                spec={ finalSpec }
+              />
+            );
+          }
         default:
           return null;
       }
