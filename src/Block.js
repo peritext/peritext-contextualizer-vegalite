@@ -101,15 +101,28 @@ class Block extends Component {
                 [key]: isNaN( +obj[key] ) ? obj[key] : +obj[key]
               } ), {} ) );
 
-          const schemaRef = liteMode ? 'https://vega.github.io/schema/vega-lite/v4.json' : 'https://vega.github.io/schema/vega/v4.json'
-          const finalSpec = {
-            $schema: schemaRef,
-            data: {
-              name: 'dataset',
-              values: finalData
-            },
-            ...spec,
-          };
+              const schemaRef = liteMode ? 'https://vega.github.io/schema/vega-lite/v4.json' : 'https://vega.github.io/schema/vega/v4.json'
+              // retrieve additional data fields if any
+              let specData = Array.isArray(spec.data) ? spec.data : [];
+              let dataProps = {};
+              // retrieve additional data props if any
+              if (specData.length) {
+                dataProps = specData.find(d => d.name === 'data') || {};
+                // remove additional data element
+                specData = specData.filter(d => d.name !== 'data')
+              }
+              const finalSpec = {
+                $schema: schemaRef,
+                ...spec,
+                data: [
+                {
+                  name: 'data',
+                  values: finalData,
+                  ...dataProps
+                },
+                ...specData
+                ],
+              };
           if (liteMode) {
             return (
               <VegaLite
