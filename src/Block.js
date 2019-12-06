@@ -111,7 +111,24 @@ class Block extends Component {
                 // remove additional data element
                 specData = specData.filter(d => d.name !== 'data')
               }
-              const finalSpec = {
+              
+          if (liteMode) {
+            const finalSpec = {
+                $schema: schemaRef,
+                ...spec,
+                data: {
+                  name: 'data',
+                  values: finalData,
+                  ...dataProps
+                },
+              };
+            return (
+              <VegaLite
+                spec={ finalSpec }
+              />
+            );
+          } else {
+            const finalSpec = {
                 $schema: schemaRef,
                 ...spec,
                 data: [
@@ -123,13 +140,6 @@ class Block extends Component {
                 ...specData
                 ],
               };
-          if (liteMode) {
-            return (
-              <VegaLite
-                spec={ finalSpec }
-              />
-            );
-          } else {
             return (
               <Vega
                 spec={ finalSpec }

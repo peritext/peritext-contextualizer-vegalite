@@ -120,20 +120,29 @@ class Block extends _react.Component {
               specData = specData.filter(d => d.name !== 'data');
             }
 
-            const finalSpec = _objectSpread({
-              $schema: schemaRef
-            }, spec, {
-              data: [_objectSpread({
-                name: 'data',
-                values: finalData
-              }, dataProps), ...specData]
-            });
-
             if (liteMode) {
+              const finalSpec = _objectSpread({
+                $schema: schemaRef
+              }, spec, {
+                data: _objectSpread({
+                  name: 'data',
+                  values: finalData
+                }, dataProps)
+              });
+
               return _react.default.createElement(VegaLite, {
                 spec: finalSpec
               });
             } else {
+              const finalSpec = _objectSpread({
+                $schema: schemaRef
+              }, spec, {
+                data: [_objectSpread({
+                  name: 'data',
+                  values: finalData
+                }, dataProps), ...specData]
+              });
+
               return _react.default.createElement(Vega, {
                 spec: finalSpec
               });
