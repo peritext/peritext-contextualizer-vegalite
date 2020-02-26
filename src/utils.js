@@ -52,18 +52,32 @@ export const asyncPrerender = ({
     // remove additional data element
     specData = specData.filter(d => d.name !== 'data')
   }
-  const finalSpec = {
-    $schema: schemaRef,
-    ...spec,
-    data: [
-    {
-      name: 'data',
-      values: finalData,
-      ...dataProps
-    },
-    ...specData
-    ],
-  };
+  let finalSpec;
+  if (specData.length) {
+    finalSpec = {
+      $schema: schemaRef,
+      ...spec,
+      data: [
+      {
+        name: 'data',
+        values: finalData,
+        ...dataProps
+      },
+      ...specData
+      ],
+    };
+  } else {
+    finalSpec = {
+      $schema: schemaRef,
+      ...spec,
+      data: {
+        name: 'data',
+        values: finalData,
+        ...dataProps
+      }
+    };
+  }
+  
   // create the view
   let view;
   if (liteMode) {

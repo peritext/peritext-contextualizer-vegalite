@@ -67,14 +67,27 @@ const asyncPrerender = ({
     specData = specData.filter(d => d.name !== 'data');
   }
 
-  const finalSpec = _objectSpread({
-    $schema: schemaRef
-  }, spec, {
-    data: [_objectSpread({
-      name: 'data',
-      values: finalData
-    }, dataProps), ...specData]
-  }); // create the view
+  let finalSpec;
+
+  if (specData.length) {
+    finalSpec = _objectSpread({
+      $schema: schemaRef
+    }, spec, {
+      data: [_objectSpread({
+        name: 'data',
+        values: finalData
+      }, dataProps), ...specData]
+    });
+  } else {
+    finalSpec = _objectSpread({
+      $schema: schemaRef
+    }, spec, {
+      data: _objectSpread({
+        name: 'data',
+        values: finalData
+      }, dataProps)
+    });
+  } // create the view
 
 
   let view;
