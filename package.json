@@ -1,6 +1,6 @@
 {
   "name": "peritext-contextualizer-vegalite",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Peritext default vega lite contextualizer for table resources",
   "main": "dist/index.js",
   "scripts": {
