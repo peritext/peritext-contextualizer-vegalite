@@ -63,7 +63,7 @@ class Block extends Component {
     const asset = appropriateAsset.asset;
 
     const renderContent = () => {
-      if (!inBrowser) {
+      if (!inBrowser || renderingMode === 'paged') {
         if (preprocessedContextualizations && preprocessedContextualizations[contextualization.id]) {
           if (preprocessedContextualizations[contextualization.id].svg) {
             return (
